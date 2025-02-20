@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
 var serviceCollection = new ServiceCollection();
 serviceCollection.AddDbContext<BloggingContext>();
@@ -58,11 +57,10 @@ var blogs = new List<Blog>()
 try
 {
     var context = services.GetRequiredService<BloggingContext>();
-    await context.BulkInsertAsync(blogs, opt => opt.IncludeGraph = true);
+    var ids = new [] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    var blogList = context.Blogs.Where(b => ids.Contains(b.BlogId)).ToList();
     
-    // Saving regularly via EF works
-    // context.AddRange(blogs);
-    // await context.SaveChangesAsync();
+    Console.WriteLine(blogList.Any());
 }
 catch (Exception e)
 {
